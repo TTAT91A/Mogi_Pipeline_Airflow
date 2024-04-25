@@ -4,8 +4,11 @@ import os
 
 import overpy
 import threading
+import sys
+sys.path.append("/opt/airflow/dags/code")
 
-import pushToGithub
+
+from pushToGithub import *
 
 
 
@@ -123,7 +126,7 @@ def get_date():
 if __name__ == "__main__":
     folder_path = os.path.join(os.path.dirname(__file__))
     dags_folder = os.path.dirname(folder_path)
-    all_files_github = pushToGithub.get_all_files(repo_name='Mogi_Pipeline_Airflow')
+    all_files_github = get_all_files(repo_name='Mogi_Pipeline_Airflow')
 
     today = str(get_date())
 
@@ -137,6 +140,6 @@ if __name__ == "__main__":
         output_path = dags_folder + "/data1/" + overpass_name
         overpass(processed_path, output_path)
 
-        pushToGithub.pushToGithub(local_file_path=output_path, file_name=overpass_name, repo_name='Mogi_Pipeline_Airflow')
+        pushToGithub(local_file_path=output_path, file_name=overpass_name, repo_name='Mogi_Pipeline_Airflow')
     else:
         print(f"{processed_path_github} not found")

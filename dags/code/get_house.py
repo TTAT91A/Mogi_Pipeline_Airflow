@@ -9,7 +9,10 @@ import os
 from github import Github
 from github import Auth
 import os
-import pushToGithub
+import sys
+sys.path.append("/opt/airflow/dags/code")
+
+from pushToGithub import *
 headers = {
   "Accept": "*/*",
   "Accept-Encoding": "gzip, deflate, br",
@@ -82,6 +85,7 @@ if __name__ == '__main__':
      
     dest_path = dags_folder + "/data1/" + FILE_NAME
     get_house_link(dest_path) #write to file
-    pushToGithub.pushToGithub(local_file_path=dest_path, file_name=FILE_NAME, repo_name='Mogi_Pipeline_Airflow')
-    # print(pushToGithub.get_all_files(repo_name="Mogi_HousePrices_Pipeline"))
+    pushToGithub(local_file_path=dest_path, file_name=FILE_NAME, repo_name='Mogi_Pipeline_Airflow')
+    
+    
     

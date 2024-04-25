@@ -1,8 +1,10 @@
 import numpy as np
 import pandas as pd
 from pathlib import Path 
-import pushToGithub
+import sys
+sys.path.append("/opt/airflow/dags/code")
 
+from pushToGithub import *
 def read_csv(text):
     df = pd.read_csv(text)
     return df
@@ -25,6 +27,7 @@ def convert_to_number(text):
                 total=float(parts[0])
         elif len(parts)==4:
             if parts[1]=='năm':
+
                 if parts[3]=='tháng':
                     total=float(parts[0])*365 + float(parts[2])*30
                 else:
@@ -68,7 +71,7 @@ if __name__ == '__main__':
 
     house_info_name = f"house_info_today({today}).csv"
     house_info_path = "dags/data/" + house_info_name
-    all_files_github = pushToGithub.get_all_files(repo_name="Mogi_HousePrices_Pipeline")
+    all_files_github = get_all_files(repo_name="Mogi_HousePrices_Pipeline")
     if house_info_path in all_files_github:
         processed_name = f"processed({today}).csv"
         input_path = "https://raw.githubusercontent.com/TTAT91A/Mogi_Pipeline_Airflow/main/dags/data1/" + house_info_name
@@ -82,6 +85,6 @@ if __name__ == '__main__':
         save_data(output_path)
 
         #push to github
-        pushToGithub.pushToGithub(local_file_path=output_path, file_name=processed_name, repo_name="Mogi_Pipeline_Airflow")
+        pushToGithub(local_file_path=output_path, file_name=processed_name, repo_name="Mogi_Pipeline_Airflow")
     else:
         print(f"{house_info_path} not found")

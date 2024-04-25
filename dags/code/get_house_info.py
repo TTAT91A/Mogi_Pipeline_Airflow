@@ -2,15 +2,16 @@ import urllib.parse
 import pandas as pd
 import requests
 import numpy as np
-# from selenium_provider import Selenium
-# from selenium_provider import get_into
 import requests
 from bs4 import BeautifulSoup
 from datetime import datetime
 import os
 import time
 
-import pushToGithub
+import sys
+sys.path.append("/opt/airflow/dags/code")
+
+from pushToGithub import *
 
 
 headers = {
@@ -114,7 +115,7 @@ if __name__ == "__main__":
     # input_path = dags_folder + f"/data/house ({today}).csv"
     # output_path = dags_folder + f"/data/house_info ({today}).csv"
 
-    all_files_github = pushToGithub.get_all_files(repo_name='Mogi_Pipeline_Airflow')
+    all_files_github = get_all_files(repo_name='Mogi_Pipeline_Airflow')
     file_house_name = f'house_today({get_date()}).csv'
     house_path = "dags/data1/" + file_house_name
 
@@ -129,6 +130,6 @@ if __name__ == "__main__":
         get_house_info(input_path, output_path)
 
         # push house_info file to github
-        pushToGithub.pushToGithub(local_file_path=output_path, file_name=house_info_name ,repo_name='Mogi_Pipeline_Airflow')
+        pushToGithub(local_file_path=output_path, file_name=house_info_name ,repo_name='Mogi_Pipeline_Airflow')
     else:
         print(f"{house_path} not found")
